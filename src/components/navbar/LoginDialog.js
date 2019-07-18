@@ -9,11 +9,18 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { withFirebase } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
+import loginWithEmail from '../../actions/loginWithEmail'
 
 class LoginDialog extends Component{
     state = {
         email: '',
         password: ''
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (prevProps.auth.uid) {
+            this.props.closeDialog()
+        }
     }
 
     fieldChange = (e) => {
@@ -27,25 +34,10 @@ class LoginDialog extends Component{
 
     submit = (e) => {
         e.preventDefault()
-        this.login()
-    }
+        this.props.loginWithEmail(this.state)
 
-    login = () => {
-        this.props.firebase.login({
-            email: this.state.email,
-            password: this.state.password
-        }).then(() => {
-            console.debug('logged in')
-            this.props.closeDialog()
-            this.setState({
-                email: '',
-                password: ''
-            })
-        }).catch((err) => {
-            console.debug(err)
-        })
     }
-
+    
     render() {
         const {open, closeDialog} = this.props
         return (
@@ -92,7 +84,23 @@ class LoginDialog extends Component{
 
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginWithEmail: (credentials) => dispatch(loginWithEmail(credentials))
+    }
+}
+
+const mapStateToProps = (state) => {
+    const {firebase, authError} = state
+    const {auth, profile} = firebase
+    return {
+        auth,
+        profile,
+        authError,
+    }
+}
+
 export default compose(
     withFirebase,
-    connect(({ firebase: { auth, profile } }) => ({ auth, profile }))
+    connect(mapStateToProps,mapDispatchToProps)
   )(LoginDialog)
