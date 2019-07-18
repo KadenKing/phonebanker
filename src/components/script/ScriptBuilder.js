@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import Script from './Script'
 
 export default class ScriptBuilder extends Component {
-
-
     render() {
         return (
             <div>

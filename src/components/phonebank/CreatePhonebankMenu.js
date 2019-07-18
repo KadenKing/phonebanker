@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {Component} from 'react'
 import SwipeableViews from 'react-swipeable-views'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import ScriptBuilder from '../script/ScriptBuilder'
+import Script from '../script/Script'
 
 const styles = {
   swipeableViewStyle: {
@@ -11,23 +11,40 @@ const styles = {
   }
 }
 
-export default function CreatePhonebankMenu() {
-  const [value, setValue] = React.useState(0)
-
-  function handleChange(event, newValue) {
-    setValue(newValue)
+export default class CreatePhonebankMenu extends Component {
+  state = {
+    phonebank: {
+      script: 'yyy',
+      questions: [],
+      phonebankers: [],
+    },
+    tabValue: 0
   }
 
-  function handleChangeIndex(index) {
-    setValue(index)
+  handleChange = (event, newValue) => {
+    this.setState({tabValue: newValue})
   }
 
+  handleChangeIndex = (index) => {
+    this.setState({tabValue: index})
+  }
+
+  handleScriptChange = (newScript) => {
+    this.setState((prevState) => {
+      let phonebank = Object.assign({}, prevState.script)
+      phonebank.script = newScript
+      return { phonebank }
+    })
+  }
+
+  render() {
+    const {tabValue, phonebank} = this.state
   return (
     <div >
       <AppBar position="static" color="default">
         <Tabs
-          value={value}
-          onChange={handleChange}
+          value={tabValue}
+          onChange={this.handleChange}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
@@ -39,16 +56,17 @@ export default function CreatePhonebankMenu() {
       </AppBar>
       <SwipeableViews
         axis="x"
-        index={value}
-        onChangeIndex={handleChangeIndex}
+        index={tabValue}
+        onChangeIndex={this.handleChangeIndex}
         style = {styles.swipeableViewStyle}
       >
         <div dir="x">
-          <ScriptBuilder></ScriptBuilder>
+          <Script text={phonebank.script} onScriptChange={this.handleScriptChange}></Script>
         </div>
         <div dir="x">Item Two</div>
         <div dir="x">Item Three</div>
       </SwipeableViews>
     </div>
   )
+}
 }

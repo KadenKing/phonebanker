@@ -1,13 +1,19 @@
 import React, {Component} from 'react';
 import ReactHtmlParser from 'react-html-parser'
-import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 import ScriptEditorDialog from './ScriptEditorDialog';
 import Paper from '@material-ui/core/Paper'
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { Typography } from '@material-ui/core';
+import Fab from '@material-ui/core/Fab'
 
 const style = {
   paper: {
     padding: 20
+  },
+  editButton: {
+    flex: 1,
+    margin: 10
   }
 }
 
@@ -26,6 +32,7 @@ export default class Script extends Component {
       var converter = new QuillDeltaToHtmlConverter(newScript.ops, {})
       var htmlScript = converter.convert()
       this.setState({script: htmlScript, editingDialogOpen: false})
+      this.props.onScriptChange(newScript)
   }
 
   openEditor = () => {
@@ -39,10 +46,21 @@ export default class Script extends Component {
     render() {
         return (
             <div>
+              <Typography variant="h2">
+                Script
+              </Typography>
               <Paper style={style.paper}>
                     {ReactHtmlParser(this.state.script)}
-              </Paper>
-                <Button varient="contained" color="primary" onClick={this.openEditor}>Edit</Button>
+                  </Paper>
+                  <Fab 
+                    size="small"
+                    style={style.editButton}
+                    color="primary" 
+                    aria-label="Edit" 
+                    align="center" 
+                    onClick={this.openEditor}>
+                      <Icon>edit_icon</Icon>
+                    </Fab>  
                 <ScriptEditorDialog 
                 script={this.state.script} 
                 onSave={this.handleScriptSave}
