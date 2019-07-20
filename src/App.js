@@ -1,23 +1,21 @@
 import React from 'react';
 import { Route, Link, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom'
-import {Container} from '@material-ui/core'
+import {Container, Portal} from '@material-ui/core'
 import CreatePhonebankMenu from './components/phonebank/CreatePhonebankMenu.js'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
 import Navigation from './components/navbar/Navigation'
 import Home from './components/home/Home'
 import { connect } from 'react-redux'
 import firebase from './config/firebaseConfig'
 import LoginGateway from './components/login/LoginGateway'
 import PrivateRoute from './components/routes/PrivateRoute'
+import Layout from './components/layout/Layout'
+import { deepPurple } from '@material-ui/core/colors';
+import DialogManager from './components/dialog/DialogManager'
 
 const theme = createMuiTheme({
   palette: {
-    primary: {
-      light: purple[50],
-      main: purple[300],
-      dark: purple[900]
-    },
+    primary: deepPurple
   },
 });
 
@@ -47,20 +45,18 @@ const Routing = (props) => (
 </Router>
 )
 
-function App() {
+function App(props) {
+  const {component} = props.fsDialog
   return (
     <MuiThemeProvider theme={theme}>
-
-        <Routing></Routing>
-
+      <Layout />
     </MuiThemeProvider>
   );
 }
 
 const mapStateToProps = (state) => {
-  const {auth} = state.firebase
   return {
-    auth
+    fsDialog: state.fsDialog,
   }
 }
 

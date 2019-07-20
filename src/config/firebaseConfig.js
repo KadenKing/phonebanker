@@ -15,4 +15,6 @@ firebase.initializeApp(firebaseConfig)
 // initialize Firestore
 firebase.firestore()
 
+firebase.functions()
+
 export default firebase

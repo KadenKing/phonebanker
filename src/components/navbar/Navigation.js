@@ -12,6 +12,7 @@ import LoginButton from './LoginButton'
 import LogoutButton from './LogoutButton'
 import Container from '@material-ui/core/Container'
 
+
 const styles = theme => ({
     root: {
       flexGrow: 1,
@@ -30,7 +31,7 @@ class Navigation extends Component {
 
             return (
                 <div>
-          <AppBar position="static">
+          {/* <AppBar position="static"> */}
             <Container>
             <Toolbar>
               <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu">
@@ -46,7 +47,7 @@ class Navigation extends Component {
             <LoginButton /> }
             </Toolbar>
             </Container>
-          </AppBar>
+          {/* </AppBar> */}
                 </div>
             )
         } 
