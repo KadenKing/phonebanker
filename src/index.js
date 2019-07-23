@@ -39,7 +39,7 @@ const store = createStoreWithFirebase(
 store.firebaseAuthIsReady.then(() => {
   ReactDOM.render(
   <Provider store={store}>
-    <SnackbarProvider SnackbarProps={{ autoHideDuration: 3500 }}>
+    <SnackbarProvider SnackbarProps={{ autoHideDuration: 3500, anchorOrigin: { vertical: 'top', horizontal: 'right'} }}>
     <App />
     </SnackbarProvider>
     </Provider>, document.getElementById('root'));

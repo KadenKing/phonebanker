@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import NostyleLink from '../routes/NostyleLink'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import PeopleIcon from '@material-ui/icons/People'

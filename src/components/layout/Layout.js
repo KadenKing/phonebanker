@@ -21,7 +21,7 @@ import Home from '../home/Home'
 import LoginGateway from '../login/LoginGateway'
 import LoginButton from '../navbar/LoginButton'
 import LogoutButton from '../navbar/LogoutButton'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Phonebankers from '../phonebank/Phonebankers';
 import PeopleIcon from '@material-ui/icons/People'
 import NostyleLink from '../routes/NostyleLink'
@@ -76,24 +76,32 @@ function Layout(props) {
     <div>
       <div className={classes.toolbar} />
       <Divider />
-      <List>
-      <ListItem button>
-								<ListItemIcon><PeopleIcon/></ListItemIcon>
-								<NostyleLink to="/phonebankers" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <ListItemText primary="Phonebankers" />
-                  </NostyleLink>
-							</ListItem>
-      </List>
-      <Divider />
 
       <List>
-      <SignupButton/>
-        {/* {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))} */}
+        {
+          auth.uid 
+          ?
+          <LogoutButton /> 
+          :
+          <div>
+          <LoginButton />
+          <SignupButton />
+          </div>
+        }
+      </List>
+      <Divider/>
+      <List>
+        {
+          auth.uid
+          &&
+          <ListItem button>
+          <ListItemIcon><PeopleIcon /></ListItemIcon>
+          <NostyleLink to="/phonebankers" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <ListItemText primary="Phonebankers" />
+          </NostyleLink>
+        </ListItem>
+        }
+
       </List>
     </div>
   );
@@ -106,25 +114,25 @@ function Layout(props) {
           {/* <Navigation /> */}
 
           <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" className={classes.title}>
-                <NostyleLink to="/">Phonebanker</NostyleLink>
-              </Typography>
-            {auth.uid ? 
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              <NostyleLink to="/">Phonebanker</NostyleLink>
+            </Typography>
+            {/* {auth.uid ? 
             <LogoutButton />
             :        
             <div>    
             <LoginButton /> 
-            </div> }
-            </Toolbar>
+            </div> } */}
+          </Toolbar>
           {/* <Toolbar>
           <IconButton
             color="inherit"
@@ -176,7 +184,7 @@ function Layout(props) {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/login" component={LoginGateway} />
-            <PrivateRoute path="/phonebankers" component={Phonebankers}/>
+            <PrivateRoute path="/phonebankers" component={Phonebankers} />
             <PrivateRoute path="/script" component={CreatePhonebankMenu} />
             <Route path="/signup" component={Signup} />
             {/* <Route component={Notfound} /> */}
