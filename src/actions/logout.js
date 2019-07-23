@@ -4,9 +4,6 @@ const logout = () => {
         .then(() => {
             dispatch({type: 'LOGOUT_SUCCESSFUL'})
         })
-        .then(() => {
-            dispatch({type: 'LOGOUT_FAILED'})
-        })
     }
 }
 

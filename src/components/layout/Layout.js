@@ -6,44 +6,28 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import CreatePhonebankMenu from '../phonebank/CreatePhonebankMenu';
-import Navigation from '../navbar/Navigation';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import PrivateRoute from '../routes/PrivateRoute'
 import Home from '../home/Home'
 import LoginGateway from '../login/LoginGateway'
-import Container from '@material-ui/core/Container'
 import LoginButton from '../navbar/LoginButton'
 import LogoutButton from '../navbar/LogoutButton'
 import {connect} from 'react-redux'
 import Phonebankers from '../phonebank/Phonebankers';
 import PeopleIcon from '@material-ui/icons/People'
+import NostyleLink from '../routes/NostyleLink'
+import SignupButton from '../signup/SignupButton';
+import Signup from '../signup/Signup';
 
-const Routing = (props) => (
-  <Router>
-    <div>
-      <Navigation></Navigation>
-      <Container>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={LoginGateway} />
-          <PrivateRoute path="/script" component={CreatePhonebankMenu} />
-          {/* <Route component={Notfound} /> */}
-        </Switch>
-      </Container>
-    </div>
-  </Router>
-)
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -57,10 +41,6 @@ const useStyles = makeStyles(theme => ({
     },
   },
   appBar: {
-    // marginLeft: drawerWidth,
-    // [theme.breakpoints.up('sm')]: {
-    //   width: `calc(100% - ${drawerWidth}px)`,
-    // },
     zIndex: theme.zIndex.drawer + 1,
   },
   menuButton: {
@@ -99,11 +79,15 @@ function Layout(props) {
       <List>
       <ListItem button>
 								<ListItemIcon><PeopleIcon/></ListItemIcon>
-								<ListItemText primary="Phonebankers" />
+								<NostyleLink to="/phonebankers" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <ListItemText primary="Phonebankers" />
+                  </NostyleLink>
 							</ListItem>
       </List>
       <Divider />
+
       <List>
+      <SignupButton/>
         {/* {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
@@ -132,13 +116,14 @@ function Layout(props) {
             <MenuIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title}>
-                Phonebanker
+                <NostyleLink to="/">Phonebanker</NostyleLink>
               </Typography>
-
             {auth.uid ? 
             <LogoutButton />
-            :             
-            <LoginButton /> }
+            :        
+            <div>    
+            <LoginButton /> 
+            </div> }
             </Toolbar>
           {/* <Toolbar>
           <IconButton
@@ -191,8 +176,9 @@ function Layout(props) {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/login" component={LoginGateway} />
-            <Route path="/phonebankers" component={Phonebankers}/>
+            <PrivateRoute path="/phonebankers" component={Phonebankers}/>
             <PrivateRoute path="/script" component={CreatePhonebankMenu} />
+            <Route path="/signup" component={Signup} />
             {/* <Route component={Notfound} /> */}
           </Switch>
         </main>

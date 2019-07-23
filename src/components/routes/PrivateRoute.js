@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import LoginGateway from '../login/LoginGateway'
 import { connect } from 'react-redux'
 
 const PrivateRoute = (topProps) => {

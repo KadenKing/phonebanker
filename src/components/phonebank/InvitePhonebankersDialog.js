@@ -16,8 +16,6 @@ import TextField from '@material-ui/core/TextField'
 import { ListItemSecondaryAction } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete'
 import { withFirebase } from 'react-redux-firebase';
-import closeDialog from '../../actions/closeDialog'
-import { connect} from 'react-redux'
 import {compose } from 'redux'
 
 const useStyles = makeStyles(theme => ({
@@ -42,12 +40,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const validate = (email) => {
-    return (/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(email))
+    return (/^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/.test(email))
 }
 
 function InvitePhonebankersDialog(props) {
   const classes = useStyles();
-  const {open} = props
+  const {open, handleClose} = props
   const [currentEmail, setCurrentEmail] = useState('')
   const [emails, setEmails] = useState([])
   const [error, setError] = useState(false)
@@ -58,7 +56,9 @@ function InvitePhonebankersDialog(props) {
     if (e.key === 'Enter') {
         if (validate(currentEmail)) {
             e.preventDefault()
-            setEmails([...emails, currentEmail])
+            if(!emails.includes(currentEmail)){
+              setEmails([...emails, currentEmail])
+            }
             setCurrentEmail('')
             setError(false)
         } else {
@@ -76,8 +76,7 @@ function InvitePhonebankersDialog(props) {
       setEmails([])
       setCurrentEmail('')
       setError(false)
-      props.closeDialog()
-      // handleClose()
+      handleClose()
   }
 
   function deleteEmail(email) {
@@ -85,15 +84,18 @@ function InvitePhonebankersDialog(props) {
   }
 
   function send() {
-    var hello = props.firebase.functions().httpsCallable('helloWorld')
-    hello().then( response => {
-        alert(response.data)
+    var sendEmail = props.firebase.functions().httpsCallable('sendInvites')
+    sendEmail({emails})
+    .then((response) => {
+      console.log(response)
+    }).catch((err) => {
+      console.log(err)
     })
   }
 
   return (
     <div>
-      {/* <Dialog fullScreen open={open} onClose={close} TransitionComponent={Transition}> */}
+      <Dialog fullScreen open={open} onClose={close} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
             <IconButton onClick={close} edge="start" color="inherit" aria-label="Close">
@@ -133,19 +135,12 @@ function InvitePhonebankersDialog(props) {
             </div>
         ))}
         </List>
-      {/* </Dialog> */}
+      </Dialog>
     </div>
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    closeDialog: () => dispatch(closeDialog)
-  }
-}
-
 export default compose(
   withFirebase,
-  connect(null, mapDispatchToProps)
 )((InvitePhonebankersDialog))
 

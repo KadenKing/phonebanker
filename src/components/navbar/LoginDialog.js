@@ -48,7 +48,7 @@ class LoginDialog extends Component{
             <DialogTitle id="form-dialog-title">Login</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                  {JSON.stringify(this.props.auth)}
+                  Login with your email and password
               </DialogContentText>
               <TextField
                 autoFocus

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {withRouter, Redirect} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import { compose } from 'redux';
 import {connect} from 'react-redux'
 import Button from '@material-ui/core/Button'

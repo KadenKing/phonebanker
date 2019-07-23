@@ -11,6 +11,7 @@ import { reduxFirestore, getFirestore } from 'redux-firestore'
 import rootReducer from './reducers/rootReducer'
 import thunk from 'redux-thunk'
 import firebase from './config/firebaseConfig'
+import { SnackbarProvider } from 'material-ui-snackbar-redux'
 
 // react-redux-firebase options
 const config = {
@@ -36,7 +37,12 @@ const store = createStoreWithFirebase(
 )
 
 store.firebaseAuthIsReady.then(() => {
-  ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+  ReactDOM.render(
+  <Provider store={store}>
+    <SnackbarProvider SnackbarProps={{ autoHideDuration: 3500 }}>
+    <App />
+    </SnackbarProvider>
+    </Provider>, document.getElementById('root'));
 })
 
 // If you want your app to work offline and load faster, you can change
