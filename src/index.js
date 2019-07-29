@@ -10,26 +10,27 @@ import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import { reduxFirestore, getFirestore } from 'redux-firestore'
 import rootReducer from './reducers/rootReducer'
 import thunk from 'redux-thunk'
-import firebase from './config/firebaseConfig'
+import firebase, { firebaseConfig } from './config/firebaseConfig'
 import { SnackbarProvider } from 'material-ui-snackbar-redux'
 
 // react-redux-firebase options
 const config = {
   userProfile: 'users', // firebase root where user profiles are stored
-  enableLogging: false, 
-  logErrors: false, // enable/disable Firebase's database logging
+  // enableLogging: false, 
+  logErrors: true, // enable/disable Firebase's database logging
   useFirestoreForProfile: true,
   attachAuthIsReady: true,
 }
 
 // Add redux Firebase to compose
 const createStoreWithFirebase = compose(
+  reduxFirestore(firebase),
   reactReduxFirebase(firebase, config),
-  reduxFirestore(firebase)
 )(createStore)
 
 // Create store with reducers and initial state
 // const store = createStoreWithFirebase(rootReducer)
+
 
 const store = createStoreWithFirebase(
     rootReducer, 

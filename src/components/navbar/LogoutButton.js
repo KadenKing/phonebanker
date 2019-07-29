@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'redux';
 import { connect } from 'react-redux'
-import Button from '@material-ui/core/Button'
 import logout from '../../actions/logout'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import PeopleIcon from '@material-ui/icons/People'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import ListItemText from '@material-ui/core/ListItemText'
 
 class LogoutButton extends Component {
@@ -18,7 +17,7 @@ class LogoutButton extends Component {
         return (
             <div>
                 <ListItem button onClick={this.handleLogout}>
-                    <ListItemIcon><PeopleIcon /></ListItemIcon>
+                    <ListItemIcon><ExitToAppIcon /></ListItemIcon>
                     <ListItemText primary="Logout" />
                 </ListItem>
             </div>

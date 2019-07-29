@@ -4,6 +4,7 @@ import { firestoreReducer } from 'redux-firestore'
 import dialogReducer from './dialogReducer'
 import authReducer from './authReducer'
 import { snackbarReducer } from 'material-ui-snackbar-redux'
+import { loadingBarReducer } from 'react-redux-loading-bar'
 
 // Add firebase to reducers
 const rootReducer = combineReducers({
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
   firebase: firebaseReducer,
   firestore: firestoreReducer,
   fsDialog: dialogReducer,
-  snackbar: snackbarReducer
+  snackbar: snackbarReducer,
+  loadingBar: loadingBarReducer,
 })
 
 export default rootReducer

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import PeopleIcon from '@material-ui/icons/People'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 import ListItemText from '@material-ui/core/ListItemText'
 import SignupDialog from './SignupDialog'
 
@@ -23,7 +23,7 @@ class SignupButton extends Component {
     return (
         <div>
             <ListItem button onClick={this.openDialog}>
-                <ListItemIcon><PeopleIcon /></ListItemIcon>
+                <ListItemIcon><AddCircleIcon /></ListItemIcon>
                     <ListItemText primary="Signup" />
             </ListItem>
             <SignupDialog open={open} closeDialog={this.closeDialog} />

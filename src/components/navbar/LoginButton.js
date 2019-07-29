@@ -3,7 +3,7 @@ import LoginDialog from './LoginDialog'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import PeopleIcon from '@material-ui/icons/People'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 export default class LoginButton extends Component {
     state = {
@@ -26,7 +26,7 @@ export default class LoginButton extends Component {
         return (
             <div>
                 <ListItem button onClick={this.openLoginDialog}>
-                    <ListItemIcon><PeopleIcon /></ListItemIcon>
+                    <ListItemIcon><AccountCircleIcon /></ListItemIcon>
                     <ListItemText primary="Login" />
                 </ListItem>
                 <LoginDialog open={loginDialogOpen} closeDialog={this.closeLoginDialog} />

@@ -27,6 +27,9 @@ import PeopleIcon from '@material-ui/icons/People'
 import NostyleLink from '../routes/NostyleLink'
 import SignupButton from '../signup/SignupButton';
 import Signup from '../signup/Signup';
+import { LoadingBar } from 'react-redux-loading-bar';
+import NavigationAppbar from './NavigationAppbar';
+import Invitations from '../invitations/Invitations'
 
 const drawerWidth = 240;
 
@@ -64,32 +67,15 @@ const useStyles = makeStyles(theme => ({
 
 function Layout(props) {
   const { container, auth } = props;
-  const classes = useStyles();
-  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  function handleDrawerToggle() {
-    setMobileOpen(!mobileOpen);
-  }
+  const classes = useStyles();
+  const theme = useTheme();
 
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
-
-      <List>
-        {
-          auth.uid 
-          ?
-          <LogoutButton /> 
-          :
-          <div>
-          <LoginButton />
-          <SignupButton />
-          </div>
-        }
-      </List>
-      <Divider/>
       <List>
         {
           auth.uid
@@ -101,17 +87,33 @@ function Layout(props) {
           </NostyleLink>
         </ListItem>
         }
-
+        <Divider />
+      <List>
+        {
+          auth.uid 
+          ?
+          <LogoutButton /> 
+          :
+          <div>
+          <LoginButton />
+          <SignupButton />
+          </div>
+        }
+      </List> 
       </List>
     </div>
   );
+
+  function handleDrawerToggle() {
+    setMobileOpen(!mobileOpen);
+  }
 
   return (
     <div className={classes.root}>
       <Router>
         <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
-          {/* <Navigation /> */}
+        <NavigationAppbar />
+        {/* <AppBar position="fixed" className={classes.appBar}>
 
           <Toolbar>
             <IconButton
@@ -126,28 +128,10 @@ function Layout(props) {
             <Typography variant="h6" className={classes.title}>
               <NostyleLink to="/">Phonebanker</NostyleLink>
             </Typography>
-            {/* {auth.uid ? 
-            <LogoutButton />
-            :        
-            <div>    
-            <LoginButton /> 
-            </div> } */}
           </Toolbar>
-          {/* <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Phonebanker
-          </Typography>
-        </Toolbar> */}
-        </AppBar>
+  
+        </AppBar> */}
+        <LoadingBar /> 
         <nav className={classes.drawer} aria-label="Mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
@@ -186,6 +170,7 @@ function Layout(props) {
             <Route path="/login" component={LoginGateway} />
             <PrivateRoute path="/phonebankers" component={Phonebankers} />
             <PrivateRoute path="/script" component={CreatePhonebankMenu} />
+            <PrivateRoute path="/invitations" component={Invitations} />
             <Route path="/signup" component={Signup} />
             {/* <Route component={Notfound} /> */}
           </Switch>

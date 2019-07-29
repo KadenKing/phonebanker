@@ -11,6 +11,7 @@ import {ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import signup from '../../actions/signup'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
+import LoadingBar from 'react-redux-loading-bar';
 
 const styles = theme => ({
     sideBySide: {
@@ -21,6 +22,11 @@ const styles = theme => ({
     },
     error: {
         backgroundColor: red
+    },
+    loadingBar: {
+        backgroundColor: theme.palette.primary.main,
+        height: 3, 
+        position: 'absolute',
     }
 })
 
@@ -31,7 +37,7 @@ class SignupDialog extends Component {
         email: '',
         password: '',
         confirmPassword: '',
-        errors: null,
+        error: null,
     }
 
     componentDidMount() {
@@ -53,8 +59,8 @@ class SignupDialog extends Component {
         )
     }
 
-    error = (errors) => {
-        console.log(errors)
+    error = (error) => {
+        console.loge(error)
     }
 
     submit = (e) => {
@@ -67,12 +73,9 @@ class SignupDialog extends Component {
         .then(() => {
             this.props.closeDialog()
         })
-        // const {password, confirmPassword} = this.state
-        // this.setState({error: null})
-
-        // if(password !== confirmPassword) {
-        //     this.setState({error: 'Passwords must match'})
-        // }
+        .catch(({message}) => {
+            this.setState({error: message})
+        })
     }
 
     render() {
@@ -81,6 +84,7 @@ class SignupDialog extends Component {
         return (
             <div>
                 <Dialog open={open} onClose={closeDialog} aria-labelledby="form-dialog-title">
+                <LoadingBar showFastActions scope="signup" className={classes.loadingBar} />
                     <ValidatorForm onSubmit={this.submit} onError={this.error}>
 
                         <DialogTitle id="form-dialog-title">Sign Up</DialogTitle>
@@ -88,6 +92,7 @@ class SignupDialog extends Component {
                             <DialogContentText>
                             {error ? <Typography color="error">{error}</Typography> : 'Complete this form to create your account'}
               </DialogContentText>
+              
                 <div className={classes.sideBySide}>
 
                 <TextValidator

@@ -17,6 +17,10 @@ import { ListItemSecondaryAction } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete'
 import { withFirebase } from 'react-redux-firebase';
 import {compose } from 'redux'
+import sendInvitations from '../../actions/sendInvitations'
+import { connect } from 'react-redux'
+import LoadingBar  from 'react-redux-loading-bar';
+import StyledLoadingBar from '../loading/StyledLoadingBar';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -84,11 +88,11 @@ function InvitePhonebankersDialog(props) {
   }
 
   function send() {
-    var sendEmail = props.firebase.functions().httpsCallable('sendInvites')
-    sendEmail({emails})
-    .then((response) => {
-      console.log(response)
-    }).catch((err) => {
+    props.sendInvitations(emails)
+    .then(() => {
+      close()
+    })
+    .catch((err) => {
       console.log(err)
     })
   }
@@ -96,7 +100,10 @@ function InvitePhonebankersDialog(props) {
   return (
     <div>
       <Dialog fullScreen open={open} onClose={close} TransitionComponent={Transition}>
+
         <AppBar className={classes.appBar}>
+        <StyledLoadingBar showFastActions scope="sendInvitations" color="secondary"  />
+
           <Toolbar>
             <IconButton onClick={close} edge="start" color="inherit" aria-label="Close">
               <CloseIcon  />
@@ -109,6 +116,7 @@ function InvitePhonebankersDialog(props) {
             </Button>
           </Toolbar>
         </AppBar>
+
         <TextField
         error={error}
         id="outlined-helperText"
@@ -140,7 +148,14 @@ function InvitePhonebankersDialog(props) {
   );
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    sendInvitations: (emails) => dispatch(sendInvitations(emails))
+  }
+}
+
 export default compose(
   withFirebase,
+  connect(null, mapDispatchToProps),
 )((InvitePhonebankersDialog))
 

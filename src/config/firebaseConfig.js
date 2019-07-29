@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 
 // Firebase config
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyA9uiWUbdnBvJo3nsWj2t5S_LlPf6ck2PQ",
     authDomain: "phonebanker-6634a.firebaseapp.com",
     databaseURL: "https://phonebanker-6634a.firebaseio.com",
