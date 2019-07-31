@@ -19,7 +19,6 @@ import { withFirebase } from 'react-redux-firebase';
 import {compose } from 'redux'
 import sendInvitations from '../../actions/sendInvitations'
 import { connect } from 'react-redux'
-import LoadingBar  from 'react-redux-loading-bar';
 import StyledLoadingBar from '../loading/StyledLoadingBar';
 
 const useStyles = makeStyles(theme => ({

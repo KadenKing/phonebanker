@@ -2,10 +2,10 @@ const db = require('./db')
 const admin = require('./admin')
 
 const getUidFromEmail = async (email) => {
-    try{
+    try {
         const user = await admin.auth().getUserByEmail(email)
         return user.uid
-    } catch(e) {
+    } catch (e) {
         console.log(e)
         return null
     }
@@ -15,15 +15,6 @@ const getProfileByUid = async (uid) => {
     const response = await db.collection('users').doc(uid).get()
     const profile = response.data()
     return profile
-}
-const alreadySent = async (inviterUid, recipientUid) => {
-    const snapshotRef = db.collection('invites').doc(`${inviterUid}_${recipientUid}`)
-
-    const snapshot = await snapshotRef.get()
-    const data = snapshot.data()
-    console.log(Boolean(data))
-    return Boolean(data)
-
 }
 
 const createInviteBody = (senderProfile) => (
@@ -36,28 +27,28 @@ const createInviteBody = (senderProfile) => (
     }
 )
 
-const send = (recipientUid, inviterUid, inviterProfile) => {
+const send = (recipientUid, senderUid, senderProfile) => {
     console.log(`sending to ${recipientUid}`)
-    const inviteBody = createInviteBody(inviterProfile)
+    const inviteBody = createInviteBody(senderProfile)
 
     const doc = {
-        inviterUid,
+        senderUid,
         recipientUid,
         ...inviteBody,
     }
-    const id = `${inviterUid}_${recipientUid}`
+    const id = `${senderUid}_${recipientUid}`
 
     db.collection('invites').doc(id).set(doc)
 }
 
-const sendOrphanedInvitation = (inviterUid, inviterProfile, orphanedEmail) => {
-    const id = `${inviterUid}_${orphanedEmail}`
+const sendOrphanedInvitation = (senderUid, senderProfile, orphanedEmail) => {
+    const id = `${senderUid}_${orphanedEmail}`
     console.log(`sending orphaned invite to ${id}`)
-    const inviteBody = createInviteBody(inviterProfile)
+    const inviteBody = createInviteBody(senderProfile)
 
     const doc = {
         orphanedEmail,
-        inviterUid,
+        senderUid,
         ...inviteBody
     }
     db.collection('orphanedInvites').doc(id).set(doc)
@@ -77,31 +68,54 @@ const mapEmailsToUids = async (emails) => {
     const uids = unfiltered.filter(uid => uid)
     const orphanedEmails = unfiltered.reduce(orphanReducer, [])
 
-    return {uids, orphanedEmails}
+    return { uids, orphanedEmails }
+}
+
+const getOrphanedInvitationsSentTo = async email => {
+    const snapshot = await db.collection('orphanedInvites').where('orphanedEmail', '==', email).get()
+    return snapshot.docs.map(doc => ({...doc.data(), id:doc.id}))
+}
+
+const fixOrphanedInvitations = async (user) => {
+    const { email, uid } = user
+    const orphanedInvitations = await getOrphanedInvitationsSentTo(email)
+    
+    const results = orphanedInvitations.map(async invitation => {
+        console.log({invitation})
+        return getProfileByUid(invitation.senderUid)
+        .then(profile => {
+            profile = {
+                ...profile,
+                email: invitation.senderEmail,
+            }
+            return send(uid, invitation.senderUid, profile)
+        })
+        .then(() => {
+            return db.collection('orphanedInvites').doc(invitation.id).delete()
+        })
+        .catch(err => {
+            throw err
+        })
+    })
+
+    return Promise.all(results)
 }
 
 const sendInvitations = async (emails, context) => {
-    console.log('sending invitations')
-
-    const inviterUid = context.auth.uid
-    const inviterProfile = {
-        ...(await getProfileByUid(inviterUid)),
-        email: context.auth.email
+    const senderUid = context.auth.uid
+    const senderProfile = {
+        ...(await getProfileByUid(senderUid)),
+        email: context.auth.token.email
     }
-    
-    console.log({inviterProfile})
 
-    const {uids, orphanedEmails} = await mapEmailsToUids(emails)
-    console.log({orphanedEmails})
+    const { uids, orphanedEmails } = await mapEmailsToUids(emails)
 
-    // console.log({uids})
-    // const alreadySentList = await Promise.all(uids.map(uid => alreadySent(uid, inviterUid)))
-    // console.log({goodUidIndices: alreadySentList})
-    // const goodUids = uids.filter((uid, i) => !alreadySentList[i])
-
-    uids.forEach(uid => send(uid, inviterUid, inviterProfile))
-    orphanedEmails.forEach(orphan => sendOrphanedInvitation(inviterUid, inviterProfile, orphan))
+    uids.forEach(uid => send(uid, senderUid, senderProfile))
+    orphanedEmails.forEach(orphan => sendOrphanedInvitation(senderUid, senderProfile, orphan))
     return orphanedEmails
 }
 
-module.exports = sendInvitations
+module.exports = {
+    sendInvitations,
+    fixOrphanedInvitations,
+}

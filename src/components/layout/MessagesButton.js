@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import IconButton from '@material-ui/core/IconButton'
 import PropTypes from 'prop-types'
 
 import Badge from '@material-ui/core/Badge'
 import MailIcon from '@material-ui/icons/Mail'
 import { compose } from 'redux';
 import { connect } from 'react-redux'
-import { withFirestore, withFirebase, firestoreConnect } from 'react-redux-firebase';
 
 class MessagesButton extends Component {
   static contextTypes = {

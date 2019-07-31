@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux';
 import { connect } from 'react-redux'
-import Invitations from './Invitations';
+import acceptInvitation from '../../actions/acceptInvitation'
 
 class FirestoreInvitations extends Component {
     static contextTypes = {
@@ -12,6 +12,22 @@ class FirestoreInvitations extends Component {
       static propTypes = {
         render: PropTypes.func.isRequired
       }
+
+    deleteInvitation = (id) => {
+        const {firestore} = this.context.store
+        firestore.collection('invites').doc(id).delete();
+    }
+
+    acceptInvitation = (id) => {
+        console.log({id})
+        this.props.acceptInvitation(id)
+        .then(response => {
+            alert('good!')
+        })
+        .catch(err => {
+            console.error(err)
+        })
+    }
 
     componentDidMount() {
         this.query = {
@@ -34,7 +50,7 @@ class FirestoreInvitations extends Component {
         if(invitations) {
             invitations.forEach(invitation => {
                 const { id } = invitation
-                firestore.collection('invites').doc(id).set({read: true}, {merge: true})
+                firestore.collection('invites').doc(id).update({read: true})
             })
         }
     }
@@ -53,7 +69,7 @@ class FirestoreInvitations extends Component {
         }))
         return (
             <div>
-                {this.props.render(output)}
+                {this.props.render(output, this.deleteInvitation, this.acceptInvitation)}
             </div>
         )
     }
@@ -67,6 +83,12 @@ const mapStateToProps = (state) => {
     }
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        acceptInvitation: (id) => dispatch(acceptInvitation(id))
+    }
+}
+
 export default compose(
-    connect(mapStateToProps)
+    connect(mapStateToProps, mapDispatchToProps)
 )(FirestoreInvitations)

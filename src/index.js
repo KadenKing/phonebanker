@@ -10,7 +10,7 @@ import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import { reduxFirestore, getFirestore } from 'redux-firestore'
 import rootReducer from './reducers/rootReducer'
 import thunk from 'redux-thunk'
-import firebase, { firebaseConfig } from './config/firebaseConfig'
+import firebase from './config/firebaseConfig'
 import { SnackbarProvider } from 'material-ui-snackbar-redux'
 
 // react-redux-firebase options
